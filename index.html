@@ -11,6 +11,25 @@
     <script type="text/javascript">
       var eCanvas = document.getElementsByTagName('canvas')[0];
       var ctx = eCanvas.getContext("2d");
+
+      ctx.fillText("Olá Mundo!", 10, 10);
+
+      // ===== Retangulo Azul =====
+      ctx.fillStyle = "blue";
+      //x, y, largura, altura
+      ctx.fillRect(20, 50, 15, 15);
+      //Contorno
+      ctx.lineWidth = 2;
+      ctx.strokeRect(20, 50, 15, 15);
+
+      // ===== Retangulo Vermelho =====
+      ctx.fillStyle = "red";
+      //x, y, largura, altura
+      ctx.fillRect(80, 50, 15, 15);
+      //Contorno
+      ctx.lineWidth = 2;
+      ctx.strokeRect(80, 50, 15, 15);
+
     </script>
 
   </body>
