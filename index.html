@@ -14,21 +14,45 @@
 
       ctx.fillText("Olá Mundo!", 10, 10);
 
+      var azul = {
+        x: 0,
+        y: 50
+      };
+
+      var fps = 60;
+      var dt = 1/fps;
+      setInterval(desenha, 1000/fps);
+
+      function desenha(){
+        ctx.clearRect(0,0,eCanvas.width,eCanvas.height)
+        azul.x = azul.x + 10*dt;
+        desenhaAzul(ctx);
+        desenhaVermelho(ctx);
+      }
+
       // ===== Retangulo Azul =====
-      ctx.fillStyle = "blue";
-      //x, y, largura, altura
-      ctx.fillRect(20, 50, 15, 15);
-      //Contorno
-      ctx.lineWidth = 2;
-      ctx.strokeRect(20, 50, 15, 15);
+      function desenhaAzul(ctx){
+        ctx.fillStyle = "blue";
+        //x, y, largura, altura
+        ctx.fillRect(azul.x, azul.y, 15, 15);
+        //Contorno
+        ctx.lineWidth = 2;
+        ctx.strokeRect(azul.x, azul.y, 15, 15);
+      }
 
       // ===== Retangulo Vermelho =====
-      ctx.fillStyle = "red";
-      //x, y, largura, altura
-      ctx.fillRect(80, 50, 15, 15);
-      //Contorno
-      ctx.lineWidth = 2;
-      ctx.strokeRect(80, 50, 15, 15);
+      function desenhaVermelho(ctx){
+        ctx.fillStyle = "red";
+        //x, y, largura, altura
+        ctx.fillRect(80, 50, 15, 15);
+        //Contorno
+        ctx.lineWidth = 2;
+        ctx.strokeRect(80, 50, 15, 15);
+      }
+
+
+
+
 
     </script>
 
