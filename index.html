@@ -63,6 +63,17 @@
           fuel = 100;
         }
 
+        if(azul.vx > 120){
+          alert("Nao Ultrapasse 120km/h");
+          azul.y = 0;
+          azul.x = 0;
+          azul.vy = 0;
+          azul.vx = 0;
+          azul.ay = 0;
+          azul.ax = 0;
+          fuel = 100;
+        }
+
         anterior = atual;
       }
 
