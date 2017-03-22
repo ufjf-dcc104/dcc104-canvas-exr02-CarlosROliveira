@@ -18,7 +18,7 @@ Sprite.prototype.desenhar = function (ctx){
 Sprite.prototype.mover = function (dt){
   //Aceleração
   this.vx = this.vx + this.ax*dt;
-  this.vy = this.vy + this.ay*dt;
+  this.vy = this.vy + (this.ay+60)*dt;
 
   //Velocidade
   this.x = this.x + this.vx*dt;
