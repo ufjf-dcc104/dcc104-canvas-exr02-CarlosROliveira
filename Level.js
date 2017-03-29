@@ -10,6 +10,7 @@ Level.prototype.init = function(){
     inimigo.y = 10;
     inimigo.width = 10+i*5;
     inimigo.height = 10+i*5;
+    inimigo.vang = 300*i;
     this.sprites.push(inimigo);
   }
 };

@@ -8,14 +8,20 @@ function Sprite(){
   this.ay = 0;
   this.width = 15;
   this.height = 15;
+  this.angle = 0;
+  this.vang = 0;
   this.color = "blue";
 }
 
 Sprite.prototype.desenhar = function (ctx){
+  ctx.save()
+  ctx.translate(this.x, this.y);
+  ctx.rotate(this.angle*2*Math.PI/360);
   ctx.fillStyle = this.color;
-  ctx.fillRect(this.x, this.y, this.width, this.height);
+  ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
   ctx.strokeStyle = "black";
-  ctx.strokeRect(this.x, this.y, this.width, this.height);
+  ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
+  ctx.restore();
 }
 
 Sprite.prototype.mover = function (dt){
@@ -26,6 +32,8 @@ Sprite.prototype.mover = function (dt){
   //Velocidade
   this.x = this.x + this.vx*dt;
   this.y = this.y + this.vy*dt;
+
+  this.angle = this.angle + this.vang *dt;
 }
 
 //Colisão retangular
