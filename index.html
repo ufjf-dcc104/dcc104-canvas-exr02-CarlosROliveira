@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <title>DCC104 - Exemplo 01</title>
     <script src="Sprite.js" type="text/javascript"></script>
+    <script src="Level.js" type="text/javascript"></script>
   </head>
   <body>
     <h1>DCC104 - Exemplo 01</h1>
-    <canvas></canvas>
+    <canvas height="600px" width="400px" style="background: #000"></canvas>
 
     <script type="text/javascript">
       var eCanvas = document.getElementsByTagName('canvas')[0];
@@ -20,12 +21,11 @@
 
       var azul = new Sprite();
       var fuel = 100; //combustivel
+      var vida = 100; //vida
       var acelerandoX = false;
       var acelerandoY = false;
-      var vermelho = new Sprite();
-      vermelho.x = 50;
-      vermelho.y = 50;
-      vermelho.color = "red";
+      var level = new Level();
+      level.init();
 
       desenha();
 
@@ -50,28 +50,36 @@
           fuel = fuel - 15*dt;
         }
 
-        azul.mover(dt);
-        vermelho.mover(dt);
-        azul.desenhar(ctx);
-        vermelho.desenhar(ctx);
+        level.perseguir(azul, dt);
 
-        if(azul.y > 150){
+        azul.mover(dt);
+        level.mover(dt);
+
+        level.colidiuCom(azul, function(inimigo, alvo){
+          inimigo.color = "red";
+        });
+
+        azul.desenhar(ctx);
+        level.desenhar(ctx);
+
+        if(azul.y > 600){
           azul.y = 0;
           azul.vy = 0;
           azul.ay = 0;
           azul.x = 150;
           fuel = 100;
+          vida = vida - 10;
         }
 
-        if(azul.vx > 120){
-          alert("Nao Ultrapasse 120km/h");
-          azul.y = 0;
-          azul.x = 0;
-          azul.vy = 0;
-          azul.vx = 0;
-          azul.ay = 0;
-          azul.ax = 0;
-          fuel = 100;
+        //vida
+        ctx.fillStyle = "blue";
+        ctx.fillRect(220, 20, vida,5)
+        ctx.strokeRect(220, 20, vida,5)
+
+        if(vida <= 0){
+          alert("Game Over");
+          vida = 100;
+          combustivel = 100;
         }
 
         anterior = atual;
@@ -81,9 +89,9 @@
         if(fuel < 0) return;
         console.log(e.keyCode);
         switch (e.keyCode) {
-          /*case 32:
+          case 32:
             azul.vy = azul.vy - 80;
-            break;*/
+            break;
           case 37:
             azul.ax = -100;
             acelerandoX = true;
