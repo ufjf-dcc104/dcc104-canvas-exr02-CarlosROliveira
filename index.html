@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>DCC104 - Exemplo 01</h1>
-    <canvas height="600px" width="400px" style="background: #000"></canvas>
+    <canvas height="500px" width="500px" style="background: #000"></canvas>
 
     <script type="text/javascript">
       var eCanvas = document.getElementsByTagName('canvas')[0];
@@ -25,7 +25,7 @@
       var acelerandoX = false;
       var acelerandoY = false;
       var level = new Level();
-      level.init();
+      level.init(ctx);
 
       desenha();
 
@@ -42,7 +42,12 @@
         ctx.fillStyle = "green";
         ctx.fillRect(20, 20, fuel,5)
         ctx.strokeRect(20, 20, fuel,5)
-
+		
+		//Base
+        ctx.fillStyle = "red";
+        ctx.fillRect(420, 180, 40, 15)
+        ctx.strokeRect(420, 180, 40, 15)
+		
         if(acelerandoX && fuel > 0){
           fuel = fuel - 5*dt;
         }
@@ -50,7 +55,7 @@
           fuel = fuel - 15*dt;
         }
 
-        level.perseguirAng(azul, dt);
+        level.perseguir(azul, dt);
 
         azul.mover(dt);
         level.mover(dt);
@@ -62,11 +67,25 @@
         azul.desenhar(ctx);
         level.desenhar(ctx);
 
-        if(azul.y > 600){
-          azul.y = 0;
+		if(level.chegouNaBase(azul)){
+		  alert("Objetivo Concluído");
+		  azul.x = 50;
+		  azul.y = 250;
+          azul.vx = 0;
           azul.vy = 0;
-          azul.ay = 0;
-          azul.x = 150;
+          azul.ax = 0;
+		  azul.ay = 0;
+          fuel = 100;
+		  vida = 100;
+		}
+		
+        if(azul.y > 500 || azul.y < 0 || azul.x < 0 || azul.x > 500){
+          azul.x = 50;
+		  azul.y = 250;
+          azul.vx = 0;
+          azul.vy = 0;
+          azul.ax = 0;
+		  azul.ay = 0;
           fuel = 100;
           vida = vida - 10;
         }
