@@ -1,7 +1,7 @@
 function Sprite(){
   this.g = 0;
   this.x = 50;
-  this.y = 250;
+  this.y = 450;
   this.vx = 0;
   this.vy = 0;
   this.ax = 0;
@@ -17,7 +17,7 @@ function Sprite(){
 Sprite.prototype.desenhar = function (ctx){
   ctx.save()
   ctx.translate(this.x, this.y);
-  ctx.rotate(this.angle*2*Math.PI/360);
+  ctx.rotate(92.7);
   ctx.fillStyle = this.color;
 
   ctx.beginPath();

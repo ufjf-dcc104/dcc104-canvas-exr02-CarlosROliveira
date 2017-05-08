@@ -14,6 +14,8 @@
       var eCanvas = document.getElementsByTagName('canvas')[0];
       var ctx = eCanvas.getContext("2d");
 
+	  var vitoria = false;
+	  
       var fps = 60;
       var atual = new Date();
       var anterior = new Date();
@@ -35,8 +37,8 @@
         atual = new Date();
         dt = (atual - anterior)/1000;
         ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
-        ctx.fillStyle = "darkgreen";
-        ctx.fillText("dt: " + dt + " - fps: " + Math.floor(1/dt), 10, 10);
+        //ctx.fillStyle = "darkgreen";
+        //ctx.fillText("dt: " + dt + " - fps: " + Math.floor(1/dt), 10, 10);
 
         //combustivel
         ctx.fillStyle = "green";
@@ -55,33 +57,33 @@
           fuel = fuel - 15*dt;
         }
 
-        level.perseguir(azul, dt);
+        //level.perseguir(azul, dt);
 
         azul.mover(dt);
-        level.mover(dt);
+        //level.mover(dt);
 
-        level.colidiuCom(azul, function(inimigo, alvo){
-          inimigo.color = "red";
-        });
+        //level.colidiuCom(azul, function(inimigo, alvo){
+        //  inimigo.color = "red";
+        //});
 
         azul.desenhar(ctx);
-        level.desenhar(ctx);
+        //level.desenhar(ctx);
 
+		if(vitoria == true){
+			ctx.fillStyle = "#FFF";
+			ctx.font="30px Arial";
+			ctx.fillText("Objetivo Concluído", 130, 250);
+			ctx.font="13px Arial";
+			ctx.fillText("Espaço - Iniciar Jogo", 200, 280);
+		}
+		
 		if(level.chegouNaBase(azul)){
-		  alert("Objetivo Concluído");
-		  azul.x = 50;
-		  azul.y = 250;
-          azul.vx = 0;
-          azul.vy = 0;
-          azul.ax = 0;
-		  azul.ay = 0;
-          fuel = 100;
-		  vida = 100;
+			vitoria = true;
 		}
 		
         if(azul.y > 500 || azul.y < 0 || azul.x < 0 || azul.x > 500){
           azul.x = 50;
-		  azul.y = 250;
+		  azul.y = 450;
           azul.vx = 0;
           azul.vy = 0;
           azul.ax = 0;
@@ -106,33 +108,49 @@
 
       addEventListener("keydown",function(e){
         if(fuel < 0) return;
-        console.log(e.keyCode);
         switch (e.keyCode) {
-          /*case 32:
-            azul.vy = azul.vy - 80;
-            break;*/
+          case 32:
+			if(vitoria == true){
+				azul.x = 50;
+				azul.y = 250;
+				azul.vx = 0;
+				azul.vy = 0;
+				azul.ax = 0;
+				azul.ay = 0;
+				fuel = 100;
+				vida = 100;
+				vitoria = false;
+			}
+            break;
           case 37:
-            azul.ax = -100;
-            acelerandoX = true;
+			if(vitoria == false){
+				azul.ax = -100;
+				acelerandoX = true;
+			}
             break;
           case 38:
-            azul.ay = -100;
-            acelerandoY = true;
+			if(vitoria == false){
+				azul.ay = -100;
+				acelerandoY = true;
+			}
             break;
           case 39:
-            azul.ax = +100;
-            acelerandoX = true;
+			if(vitoria == false){
+				azul.ax = +100;
+				acelerandoX = true;
+			}
             break;
           case 40:
-            azul.ay = +100;
-            acelerandoY = true;
+			if(vitoria == false){
+				azul.ay = +100;
+				acelerandoY = true;
+			}
             break;
           default:
         }
       })
 
       addEventListener("keyup",function(e){
-        console.log(e.keyCode);
         switch (e.keyCode) {
           case 37:
             azul.ax = 0;
