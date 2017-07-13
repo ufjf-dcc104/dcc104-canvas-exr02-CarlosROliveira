@@ -48,7 +48,36 @@ Level.prototype.perseguirAng = function (alvo, dt) {
 };
 
 Level.prototype.chegouNaBase = function (alvo){
-  if(alvo.x >= 410 && alvo.x <= 468 && alvo.y >= 172 && alvo.y <= 203){
+  if(alvo.x + alvo.width < 420)return false;
+  if(alvo.x > 420 + 40)return false;
+  if(alvo.y + alvo.height < 180)return false;
+  if(alvo.y > 180 + 15)return false;
+  
+  if(alvo.x + alvo.width >= 420 && alvo.x <= 460 && alvo.y + alvo.height >= 181 && alvo.y <= 195){
+	  //console.log(alvo.x + alvo.width)
+	if(alvo.x + alvo.width < 425){
+		alvo.x = 394;
+	}
+	if(alvo.x > 455){
+		alvo.x = 461;
+	}
+	if(alvo.y > 190){
+		alvo.y = 195;
+	}
+	azul.vx = 0;
+	azul.vy = 0;
+	azul.ax = 0;
+	azul.ay = 0;
+	
+	if(alvo.y + alvo.height > 185){
+		vida = vida - 10;
+	}
+	return false;
+  }
+  
+  return true;
+  
+  /*if(alvo.x >= 410 && alvo.x <= 468 && alvo.y >= 172 && alvo.y <= 203){
 	  azul.vx = 0;
       azul.vy = 0;
       azul.ax = 0;
@@ -56,5 +85,5 @@ Level.prototype.chegouNaBase = function (alvo){
 	  return false;
   }
   
-  if(alvo.x >= 410 && alvo.x <= 468 && alvo.y >= 171 && alvo.y <= 172) return true;
+  if(alvo.x >= 410 && alvo.x <= 468 && alvo.y >= 171 && alvo.y <= 172) return true;*/
 };

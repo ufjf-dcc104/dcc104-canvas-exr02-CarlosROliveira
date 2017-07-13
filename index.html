@@ -2,19 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>DCC104 - Exemplo 01</title>
+    <title>DCC104 - Exercício 01</title>
     <script src="Sprite.js" type="text/javascript"></script>
     <script src="Level.js" type="text/javascript"></script>
   </head>
   <body>
-    <h1>DCC104 - Exemplo 01</h1>
-    <canvas height="500px" width="500px" style="background: #000"></canvas>
+    <h1>DCC104 - Exercício 01</h1>
+    <canvas height="500px" width="500px" style="background-image: url('fundo.jpg');"></canvas>
 
     <script type="text/javascript">
       var eCanvas = document.getElementsByTagName('canvas')[0];
       var ctx = eCanvas.getContext("2d");
 
 	  var vitoria = false;
+	  var perdeu = false;
+	  var pontos = 0;
 	  
       var fps = 60;
       var atual = new Date();
@@ -41,6 +43,12 @@
         //ctx.fillText("dt: " + dt + " - fps: " + Math.floor(1/dt), 10, 10);
 
         //combustivel
+		ctx.fillStyle = "#FFF";
+		ctx.font="13px Arial";
+		ctx.fillText("Combustível", 20, 15);
+		ctx.fillStyle = "gray";
+        ctx.fillRect(20, 20, 100,5)
+        ctx.strokeRect(20, 20, 100,5)
         ctx.fillStyle = "green";
         ctx.fillRect(20, 20, fuel,5)
         ctx.strokeRect(20, 20, fuel,5)
@@ -70,9 +78,19 @@
         //level.desenhar(ctx);
 
 		if(vitoria == true){
+			azul.g = 0;
 			ctx.fillStyle = "#FFF";
 			ctx.font="30px Arial";
 			ctx.fillText("Objetivo Concluído", 130, 250);
+			ctx.font="13px Arial";
+			ctx.fillText("Espaço - Iniciar Jogo", 200, 280);
+		}
+		
+		if(perdeu){
+			azul.g = 0;
+			ctx.fillStyle = "#FFF";
+			ctx.font="30px Arial";
+			ctx.fillText("Você perdeu", 177, 250);
 			ctx.font="13px Arial";
 			ctx.fillText("Espaço - Iniciar Jogo", 200, 280);
 		}
@@ -81,67 +99,87 @@
 			vitoria = true;
 		}
 		
-        if(azul.y > 500 || azul.y < 0 || azul.x < 0 || azul.x > 500){
+        if(azul.y > 501 || ((azul.y + azul.height)+1) < 0 || ((azul.x + azul.width)+1) < 0 || azul.x > 501){
           azul.x = 50;
-		  azul.y = 450;
+		  azul.y = 370;
           azul.vx = 0;
           azul.vy = 0;
           azul.ax = 0;
 		  azul.ay = 0;
+		  azul.g = 10;
           fuel = 100;
           vida = vida - 10;
         }
 
         //vida
+		ctx.fillStyle = "#FFF";
+		ctx.font="13px Arial";
+		ctx.fillText("Vida", 220, 15);
+		ctx.fillStyle = "gray";
+        ctx.fillRect(220, 20, 100,5)
+        ctx.strokeRect(220, 20, 100,5)
         ctx.fillStyle = "blue";
         ctx.fillRect(220, 20, vida,5)
         ctx.strokeRect(220, 20, vida,5)
+		
+		ctx.fillStyle = "#FFF";
+		ctx.font="15px Arial";
+		ctx.fillText("Pontos: " + pontos, 390, 25);
 
         if(vida <= 0){
-          alert("Game Over");
-          vida = 100;
-          combustivel = 100;
+          perdeu = true;
         }
 
         anterior = atual;
       }
 
       addEventListener("keydown",function(e){
-        if(fuel < 0) return;
+        if(fuel < 0){
+			azul.g = 100;
+			return;
+		} 
         switch (e.keyCode) {
           case 32:
-			if(vitoria == true){
-				azul.x = 50;
-				azul.y = 250;
+			if(vitoria || perdeu){
+				azul.x = Math.floor((Math.random() * 483) + 1);
+				azul.y = Math.floor((Math.random() * 458) + 1);
 				azul.vx = 0;
 				azul.vy = 0;
 				azul.ax = 0;
 				azul.ay = 0;
+				azul.g = 10;
 				fuel = 100;
 				vida = 100;
+				if(vitoria){
+					pontos++;
+				}
+				if(perdeu){
+					pontos = 0;
+				}
 				vitoria = false;
+				perdeu = false;
 			}
             break;
           case 37:
-			if(vitoria == false){
+			if(!vitoria && !perdeu){
 				azul.ax = -100;
 				acelerandoX = true;
 			}
             break;
           case 38:
-			if(vitoria == false){
+			if(!vitoria && !perdeu){
 				azul.ay = -100;
 				acelerandoY = true;
 			}
             break;
           case 39:
-			if(vitoria == false){
+			if(!vitoria && !perdeu){
 				azul.ax = +100;
 				acelerandoX = true;
 			}
             break;
           case 40:
-			if(vitoria == false){
+			if(!vitoria && !perdeu){
 				azul.ay = +100;
 				acelerandoY = true;
 			}
