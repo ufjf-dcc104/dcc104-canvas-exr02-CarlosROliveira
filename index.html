@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DCC104 - Exercício 02</title>
+    <script src="Sprite.js" type="text/javascript"></script>
+    <script src="Level.js" type="text/javascript"></script>
+	<script src="SpriteTiro.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <h1>DCC104 - Exercício 02</h1>
+	<div>
+    <canvas height="500px" width="500px" style="background-image: url('fundo.jpg');"></canvas>
+	</div>
+	<label style="font-size:13px">*A cada 10 pontos a velocidade dos inimigos aumenta</label>
+
+    <script type="text/javascript">
+      var eCanvas = document.getElementsByTagName('canvas')[0];
+      var ctx = eCanvas.getContext("2d");
+
+	  var vitoria = false;
+	  var perdeu = false;
+	  var pontos = 0;
+	  var vida = 100;
+	  var energia = 100;
+	  
+      var fps = 60;
+      var atual = new Date();
+      var anterior = new Date();
+      var dt = 1/fps;
+
+      var azul = new Sprite();
+	  azul.imagem.src = "jogador.png";
+      var acelerandoX = false;
+      var acelerandoY = false;
+      var level = new Level();
+      //level.init(ctx);
+
+	  setInterval(function () {
+        level.insereInimigos();
+	  }, 1000);
+	  
+      desenha();
+
+
+      function desenha(){
+	  
+        requestAnimationFrame(desenha);
+        atual = new Date();
+        dt = (atual - anterior)/1000;
+        ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
+		
+		if(energia <= 0){
+			energia = 100;
+			vida = vida - 20;
+		}
+		
+		if(vida <= 0){
+			vida = 0;
+			perdeu = true;
+		}
+		
+		//energia
+		ctx.fillStyle = "#FFF";
+		ctx.font="13px Arial";
+		ctx.fillText("Energia", 20, 15);
+		ctx.fillStyle = "gray";
+        ctx.fillRect(20, 20, 100,5)
+        ctx.strokeRect(20, 20, 100,5)
+        ctx.fillStyle = "green";
+        ctx.fillRect(20, 20, energia,5)
+        ctx.strokeRect(20, 20, energia,5)
+		
+		//vida
+		ctx.fillStyle = "#FFF";
+		ctx.font="13px Arial";
+		ctx.fillText("Vida", 220, 15);
+		ctx.fillStyle = "gray";
+        ctx.fillRect(220, 20, 100,5)
+        ctx.strokeRect(220, 20, 100,5)
+        ctx.fillStyle = "blue";
+        ctx.fillRect(220, 20, vida,5)
+        ctx.strokeRect(220, 20, vida,5)
+		
+		ctx.fillStyle = "#FFF";
+		ctx.font="15px Arial";
+		ctx.fillText("Pontos: " + pontos, 390, 25);
+		
+        azul.mover(dt);
+        level.mover(dt);
+
+        level.colidiuCom(azul, function(inimigo, alvo){
+          level.sprites.splice(inimigo,1);
+		  energia = energia - 20;
+        });
+		
+		level.colidiuComTiro(azul.tiros, function(inimigo, alvo){
+			level.sprites.splice(inimigo,1);
+			azul.tiros.splice(alvo,1);
+			pontos++;
+			if(pontos % 10 == 0){
+				level.velocidade = level.velocidade + 20;
+			}
+        });
+
+        azul.desenhar(ctx);
+        level.desenhar(ctx);
+		
+		if(perdeu){
+			ctx.fillStyle = "#FFF";
+			ctx.font="30px Arial";
+			ctx.fillText("Você perdeu", 177, 250);
+			ctx.font="13px Arial";
+			ctx.fillText("ENTER - Iniciar Jogo", 200, 280);
+		}
+
+		if(vitoria == true){
+			azul.g = 0;
+			ctx.fillStyle = "#FFF";
+			ctx.font="30px Arial";
+			ctx.fillText("Objetivo Concluído", 130, 250);
+			ctx.font="13px Arial";
+			ctx.fillText("Espaço - Iniciar Jogo", 200, 280);
+		}
+		
+        if(azul.x <= 1 || (azul.x + azul.width) >= 499){
+			if(azul.x <= 1){
+				azul.x = 1;
+			}
+			if((azul.x + azul.width) >= 499){
+				azul.x = 499 - azul.width;
+			}
+			azul.vx = 0;
+			azul.vy = 0;
+			azul.ax = 0;
+			azul.ay = 0;
+        }
+
+        anterior = atual;
+      }
+
+      addEventListener("keydown",function(e){
+        switch (e.keyCode) {
+		  case 13:
+			if(vitoria || perdeu){
+				azul.vx = 0;
+				azul.vy = 0;
+				azul.ax = 0;
+				azul.ay = 0;
+				azul.g = 10;
+				fuel = 100;
+				vida = 100;
+				if(perdeu){
+					pontos = 0;
+					level = new Level();
+					level.init(ctx);
+				}
+				vitoria = false;
+				perdeu = false;
+			}
+		    break;
+          case 32:
+			if(!vitoria && !perdeu){
+				azul.atirar();
+			}
+            break;
+          case 37:
+			if(!vitoria && !perdeu){
+				//azul.ax = -30;
+				azul.vx = -80;
+				acelerandoX = true;
+			}
+            break;
+          case 39:
+			if(!vitoria && !perdeu){
+				//azul.ax = +30;
+				azul.vx = +80;
+				acelerandoX = true;
+			}
+            break;
+          default:
+        }
+      })
+	  
+	  addEventListener("keyup",function(e){
+        switch (e.keyCode) {
+          case 32:
+            break;
+          case 37:
+			if(vitoria == false){
+				azul.vx = 0;
+				acelerandoX = true;
+			}
+            break;
+          case 39:
+			if(vitoria == false){
+				azul.vx = 0;
+				acelerandoX = true;
+			}
+            break;
+          default:
+        }
+      })
+
+    </script>
+
+  </body>
+</html>
